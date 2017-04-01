@@ -1,7 +1,7 @@
 <template>
-  <!--设置详情页面-->
   <div class="box">
-      <div class="crumb">
+    <!--设置详情页面-->
+    <div class="crumb">
         <Breadcrumb>
           <Breadcrumb-item href="/">首页</Breadcrumb-item>
           <Breadcrumb-item href="/components/breadcrumb">个人设置</Breadcrumb-item>
@@ -16,7 +16,9 @@
             <Input v-model="user.email"></Input>
           </Form-item>
           <Form-item label="个人头像">
-            <div class="avatar"></div>
+            <div class="avatar">
+              <input @change="upload" type="file" id="file">
+            </div>
             <span class="avatar-msg">点击上传头像</span>
           </Form-item>
           <Form-item label="个性签名">
@@ -48,6 +50,13 @@
                 this.$Message.error('表单验证失败!');
               }
             })
+          },
+          upload(){
+              console.log(1);
+
+          },
+          userSetting(){
+
           }
         }
     }
@@ -71,9 +80,19 @@
     background-position: 0 0;
     background-image: url("./avatar.jpg");
     background-size: 150px;
+    overflow: hidden;
+    cursor: pointer;
   }
   .avatar-msg{
     color: #52d7e0;
     font-size: 14px;
+  }
+  #file{
+    display: block;
+    font-size: 0;
+    padding: 0;
+    padding: 150px 0 0 150px;
+    box-sizing: border-box;
+    cursor: pointer;
   }
 </style>

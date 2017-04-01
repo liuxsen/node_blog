@@ -3,83 +3,114 @@ let router = express.Router();
 let User = require('../db/User');
 let async = require('async');
 
-let addUser = function(person,callback){
+let addUser = function (person, callback) {
     console.log(person);
     async.waterfall([
-       // 查看是否有这个用户
-       function(cb){
-           User.findOne({uname:person.uname},function(err,user){
-               if(user){
-                   cb("用户已经存在")
-               }else{
-                   cb(null,user)
-               }
-           })
-       },
+        // 查看是否有这个用户
+        function (cb) {
+            User.findOne({uname: person.uname}, function (err, user) {
+                if (user) {
+                    cb("用户已经存在")
+                } else {
+                    cb(null, user)
+                }
+            })
+        },
         //添加用户
-        function(user,cb){
+        function (user, cb) {
             let currentUser = new User(person);
-            currentUser.save(function(err,user){
-                cb(err,user);
+            currentUser.save(function (err, user) {
+                cb(err, user);
             });
         }
-    ],function(err,result){
-        callback(err,result);
+    ], function (err, result) {
+        callback(err, result);
     })
 };
 
 
 // 添加用户
-router.post('/add', function(req, res, next) {
+router.post('/add', function (req, res, next) {
     // res.send('respond with a resource');
-    addUser(req.body,function(err,person){
-        if(err){
-            res.send({code: 1000,msg: '添加用户失败'})
-        }else{
-            res.send({code:0,msg:'添加用户成功',user:person});
+    addUser(req.body, function (err, person) {
+        if (err) {
+            res.send({code: 1000, msg: '添加用户失败'})
+        } else {
+            res.send({code: 0, msg: '添加用户成功', user: person});
         }
     });
 });
 
 /* 用户登录 */
-let login = function(person,callback){
+let login = function (person, callback) {
     console.log("----------")
     console.log(person);
     async.waterfall([
-        function(cb){
+        function (cb) {
             // 查看是否有这个用户
-            User.findOne({uname:person.uname},function(err,user){
-                if(err){
-                    cb({code: 1000,msg:"查询失败"})
-                }else if(user){
-                    if(user.password === person.password){
-                        cb(null,{code: 0,msg:'用户登录成功',user:user})
-                    }else{
-                        cb({code: 1001,msg:"用户密码不正确"})
+            User.findOne({uname: person.uname}, function (err, user) {
+                if (err) {
+                    cb({code: 1000, msg: "查询失败"})
+                } else if (user) {
+                    if (user.password === person.password) {
+                        cb(null, {code: 0, msg: '用户登录成功', user: user})
+                    } else {
+                        cb({code: 1001, msg: "用户密码不正确"})
                     }
-                }else if(err===null && user===null){
-                    cb({code: 1002,msg: "没有当前用户"});
+                } else if (err === null && user === null) {
+                    cb({code: 1002, msg: "没有当前用户"});
                 }
             })
         }
-    ],function(err,user){
-        if(err){
+    ], function (err, user) {
+        if (err) {
             callback(err);
-        }else{
-            callback(null,user);
+        } else {
+            callback(null, user);
         }
     })
 }
 
 /* 用户登录 */
-router.post('/login', function(req, res, next) {
-    login(req.body,function(err,result){
-        if(err){
+router.post('/login', function (req, res, next) {
+    login(req.body, function (err, result) {
+        if (err) {
             res.send(err);
-        }else{
+        } else {
             res.send(result);
         }
     })
+});
+
+//用户修改头像
+let editAvatar = function (user, path, callback) {
+    async.waterfall([
+        function (cb) {
+            //    查找用户
+            User.findOne({_id: userId})
+                .select('avatar')
+                .exec(function (err, reulst) {
+                    cb(err, result);
+                })
+        },
+        function (user, cb) {
+            user.avatar = path;
+            user.save(function (err, result) {
+                cb(err, result);
+            })
+        }
+    ], function (err, result) {
+        if (err) {
+            callback({code: 1005, msg: '用户头像修改失败'})
+        } else {
+            callback({code: 1006, msg: '用户头像修改成功', data: result});
+        }
+    })
+}
+
+//用户修改头像
+router.post('/editAvatar', function (req, res) {
+    console.log(req.rields);
 });
 
 
