@@ -9,22 +9,13 @@
           <a href="#">新手入门</a>
           <a href="#">API</a>
           <a href="#">关于</a>
-          <a href="#">设置</a>
+          <router-link to="/setting">设置</router-link>
           <a href="#">登录</a>
         </div>
       </div>
     </div>
     <div class="container">
-      <Row type="flex" justify="center" align="top">
-        <Col span="16">
-        <div>
-          <router-view></router-view>
-        </div>
-        </Col>
-        <Col span="4">
-        <i-panel></i-panel>
-        </Col>
-      </Row>
+      <router-view></router-view>
     </div>
     <i-band></i-band>
   </div>

@@ -8,6 +8,7 @@ let articleSchema = new Schema({
     title: String,
     create: { type: Number, default: (new Date()).getTime() },
     conent: String,
+    comment:Array,
     type: Number, // 0 分享 1 问答
     author: {type: Schema.Types.ObjectId,ref:'User'}
 },{ timestamps: true });

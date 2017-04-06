@@ -2,8 +2,11 @@
   <div>
     <div class="box">
       <Form ref="formValidate2" :model="formValidate2" :rules="ruleValidate2" :label-width="80">
-        <Form-item prop="name" label="账号">
+        <Form-item prop="name" label="用户名">
           <Input type="text" v-model="formValidate2.name"></Input>
+        </Form-item>
+        <Form-item prop="name" label="邮箱">
+          <Input type="text" v-model="formValidate2.email"></Input>
         </Form-item>
         <Form-item prop="password" label="密码">
           <Input type="password" v-model="formValidate2.password"></Input>
@@ -23,10 +26,12 @@
 //              注册
         formValidate2: {
           name: "",
-          password: ""
+          password: "",
+          email: ""
         },
         ruleValidate2: {
-          name: {required: true, min: 6, message: '至少输入6个数字', trigger: 'change'},
+          name: {required: true, min: 2, message: '至少输入2个数字', trigger: 'change'},
+          email: {required: true, min: 6, message: '至少输入6个数字', trigger: 'change'},
           password: {required: true, min: 6, message: '至少输入6个数字', trigger: 'change'},
         }
       }
@@ -55,14 +60,14 @@
       },
       register(){
         axios.post('/web/users/add', {
+          email: this.formValidate2.email,
           uname: this.formValidate2.name,
           password: this.formValidate2.password
         })
           .then((response) => {
-            console.log(response);
             if (response.data.code === 0) {
               localStorage.setItem('token', response.data.user._id);
-              this.$router.push('/admin');
+              this.$router.push('/setting');
             } else {
               this.$Message.error('用户已经存在');
             }

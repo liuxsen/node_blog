@@ -72,7 +72,7 @@ let getArticles = function(callback){
                 //.populate('author','-password -articles -follow -fans')
                 .populate({
                     path:'author',
-                    select:{uname:1,_id:1} //1表示填充， 0 表示不填充
+                    select:{password:0} //1表示填充， 0 表示不填充
                 })
                 .exec(function(err,results){
                     if(err){
@@ -104,7 +104,7 @@ let getArticleById = function(id,callback){
               .populate({
                   path: 'author',
                   select:{
-                      uname: 1
+                      password: 0
                   }
               })
               .exec(function(err,result){

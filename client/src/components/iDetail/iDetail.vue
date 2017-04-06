@@ -2,12 +2,24 @@
   <div class="article">
     <div class="title">
       <div>
+        <img :src="author.avatar" alt="">
         <span class="h1">{{info.title}}</span>
         <span v-if="author.uname" class="user" @click="detail(author._id)">{{author.uname}}</span>
       </div>
       <span>{{info.create | time}}</span>
     </div>
     <div class="content" v-html="info.conent"></div>
+    <div class="comment">
+      <div>
+        <Input v-model="addAcommnet" type="textarea" :rows="4" placeholder="请输入..."></Input>
+        <Button @click="addComment" type="success">成功按钮</Button>
+      </div>
+      <ul>
+        <li v-for="item in comment">
+          {{item.content}}
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 <script>
@@ -16,7 +28,9 @@
     data(){
       return {
         info: "",
-        author:""
+        author:"",
+        addAcommnet:"",
+        comment:[]
       }
     },
     props: {},
@@ -24,6 +38,10 @@
       detail(id){
           console.log(id);
           this.$router.push("/udetial/"+id);
+      },
+//      添加评论
+      addComment(){
+
       }
     },
     filters:{

@@ -2,13 +2,16 @@ let express = require('express');
 let router = express.Router();
 let User = require('../db/User');
 let async = require('async');
-
+let fs = require('fs');
+let formidable = require('formidable');
+let util = require('util');
+let path = require('path');
 let addUser = function (person, callback) {
     console.log(person);
     async.waterfall([
         // 查看是否有这个用户
         function (cb) {
-            User.findOne({uname: person.uname}, function (err, user) {
+            User.findOne({email: person.email}, function (err, user) {
                 if (user) {
                     cb("用户已经存在")
                 } else {
@@ -82,35 +85,81 @@ router.post('/login', function (req, res, next) {
     })
 });
 
-//用户修改头像
-let editAvatar = function (user, path, callback) {
+
+let updataInfo = function (userId, newinfo, callback) {
     async.waterfall([
         function (cb) {
-            //    查找用户
-            User.findOne({_id: userId})
-                .select('avatar')
-                .exec(function (err, reulst) {
-                    cb(err, result);
+            //查找用户
+            User.findById(userId)
+                .select({
+                    'password': 0
+                })
+                .exec(function (err, user) {
+                    cb(err, user)
                 })
         },
+        //更新用户数据
         function (user, cb) {
-            user.avatar = path;
-            user.save(function (err, result) {
+            user.email = newinfo.email;
+            user.avatar = newinfo.avatar;
+            user.description = newinfo.desc;
+            user.save((err, result) => {
                 cb(err, result);
             })
         }
     ], function (err, result) {
-        if (err) {
-            callback({code: 1005, msg: '用户头像修改失败'})
-        } else {
-            callback({code: 1006, msg: '用户头像修改成功', data: result});
-        }
+        callback(err, result);
     })
-}
+};
 
 //用户修改头像
-router.post('/editAvatar', function (req, res) {
-    console.log(req.rields);
+router.post('/updatainfo', function (req, res, next) {
+    console.log(req.body.userId);
+    let userId = req.body.userId;
+    updataInfo(userId, req.body, function (err, result) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send({coed:0,msg:'数据更新成功'});
+        }
+    })
+});
+
+
+let getInfo = function(userId,callback){
+    async.waterfall([
+        function (cb) {
+            //查找用户
+            User.findOne({_id:userId})
+                .select({
+                    password: 0,
+                    fans:0,
+                    articles:0,
+                    __v:0,
+                    follow:0
+                })
+                .exec(function (err, user) {
+                    cb(err, user)
+                })
+        }
+    ], function (err, result) {
+        console.log(result);
+        callback(err, result);
+    })
+};
+
+//查找用户数据
+router.post('/getinfo', function (req, res, next) {
+    console.log(req.body.userId);
+    let userId = req.body.userId;
+    getInfo(userId, function (err, result) {
+        if (err) {
+            console.log(err);
+            res.send(err);
+        } else {
+            res.send(result);
+        }
+    })
 });
 
 

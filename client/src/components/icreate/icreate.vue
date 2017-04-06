@@ -1,31 +1,36 @@
 <template>
   <div>
-    <div class="box">
-      <div class="layout-breadcrumb">
-        <Breadcrumb>
-          <Breadcrumb-item href="#">首页</Breadcrumb-item>
-          <Breadcrumb-item href="#">发布话题</Breadcrumb-item>
-        </Breadcrumb>
-      </div>
-      <div class="list">
-        <Select v-model="type" style="width:200px">
-          <Option v-for="item in cityList" :value="item.value" :key="item">{{ item.label }}</Option>
-        </Select>
-      </div>
-      <div class="list">
-        <Input type="text" placeholder="标题字数10字以上" v-model="article.title"></Input>
-      </div>
-      <div class="list">
+    <Row>
+      <Col span="16" push="4" class="add-article">
+      <div class="box">
+        <div class="layout-breadcrumb">
+          <Breadcrumb>
+            <Breadcrumb-item href="#">首页</Breadcrumb-item>
+            <Breadcrumb-item href="#">发布话题</Breadcrumb-item>
+          </Breadcrumb>
+        </div>
+        <div class="list">
+          <Select v-model="type" style="width:200px">
+            <Option v-for="item in cityList" :value="item.value" :key="item">{{ item.label }}</Option>
+          </Select>
+        </div>
+        <div class="list">
+          <Input type="text" placeholder="标题字数10字以上" v-model="article.title"></Input>
+        </div>
+        <div class="list">
 
-        <vue-editor
-          :use-save-button="false"
-          @editor-updated="handleUpdatedContent">
-        </vue-editor>
+          <vue-editor
+            :use-save-button="false"
+            @editor-updated="handleUpdatedContent">
+          </vue-editor>
+        </div>
+        <div class="list">
+          <Button type="primary" @click="addArticle">提交</Button>
+        </div>
       </div>
-      <div class="list">
-        <Button type="primary" @click="addArticle">提交</Button>
-      </div>
-    </div>
+      </Col>
+    </Row>
+
   </div>
 </template>
 <script>
@@ -92,4 +97,9 @@
 .save-button:hover {
   background-color: #35495e;
 }
+  .add-article{
+    background-color: #ffffff;
+    padding: 12px;
+    border-radius: 12px;
+  }
 </style>

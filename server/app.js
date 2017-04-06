@@ -10,7 +10,6 @@ mongoose.connect('mongodb://localhost/blog');
 let index = require('./routes/index');
 let users = require('./routes/users');
 let article = require('./routes/article');
-const formidable = require('express-formidable');
 let app = express();
 
 // view engine setup
@@ -24,13 +23,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-// 文件上传插件
+app.use(express.static(path.join(__dirname, 'imgs')));
 
-app.use(formidable({
-    encoding: 'utf-8',
-    uploadDir: '/imgs',
-    multiples: true
-}));
 
 app.use('/', index);
 //添加用户，
@@ -50,10 +44,9 @@ app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
   // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  // res.status(err.status || 500);
+  // res.render('error');
 });
 
 module.exports = app;
